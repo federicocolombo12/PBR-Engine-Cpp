@@ -2,6 +2,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <glm/gtc/type_ptr.hpp>
 
 #define GL_SILENCE_DEPRECATION
 #include <OpenGL/gl3.h>
@@ -69,6 +70,10 @@ void Shader::setVec2(const std::string &name, float x, float y) const {
 }
 void Shader::setVec3(const std::string &name, float x, float y, float z) const { 
     glUniform3f(glGetUniformLocation(ID, name.c_str()), x, y, z); 
+}
+
+void Shader::setMat4(const std::string &name, const glm::mat4 &mat) const {
+    glUniformMatrix4fv(glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, glm::value_ptr(mat));
 }
 
 void Shader::checkCompileErrors(unsigned int shader, std::string type) {

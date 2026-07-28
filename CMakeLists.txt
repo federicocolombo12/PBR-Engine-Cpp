@@ -23,6 +23,30 @@ set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(glfw)
 
+# Scarichiamo GLM (OpenGL Mathematics), lo standard dell'industria per le matrici 3D
+FetchContent_Declare(
+    glm
+    GIT_REPOSITORY https://github.com/g-truc/glm.git
+    GIT_TAG        0.9.9.8
+)
+# Poiché GLM è "Header-Only" e il suo CMake è vecchio, scarichiamo i file senza compilarli
+FetchContent_GetProperties(glm)
+if(NOT glm_POPULATED)
+  FetchContent_Populate(glm)
+endif()
+
+# Scarichiamo Assimp (Open Asset Import Library) per caricare modelli 3D (.obj, .fbx)
+# Disattiviamo la compilazione dei suoi test e tool per risparmiare tempo di build
+set(ASSIMP_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+set(ASSIMP_BUILD_ASSIMP_TOOLS OFF CACHE BOOL "" FORCE)
+set(ASSIMP_BUILD_ZLIB ON CACHE BOOL "" FORCE)
+FetchContent_Declare(
+    assimp
+    GIT_REPOSITORY https://github.com/assimp/assimp.git
+    GIT_TAG        v5.4.1 # Ultima versione stabile 
+)
+FetchContent_MakeAvailable(assimp)
+
 # Raccogliamo tutti i file .cpp nella cartella src
 file(GLOB_RECURSE SRC_FILES "src/*.cpp")
 
@@ -30,9 +54,9 @@ file(GLOB_RECURSE SRC_FILES "src/*.cpp")
 add_executable(Raymarcher ${SRC_FILES})
 
 # === MAC OS SPECIFIC ===
-# Cerchiamo il framework OpenGL nativo di Mac
-find_library(OPENGL_FRAMEWORK OpenGL)
+# Cerchiamo OpenGL in modo universale (funziona su Mac, Windows, Linux)
+find_package(OpenGL REQUIRED)
 
-# Colleghiamo l'eseguibile alle librerie
-target_link_libraries(Raymarcher PRIVATE glfw ${OPENGL_FRAMEWORK})
-target_include_directories(Raymarcher PRIVATE src)
+# Colleghiamo l'eseguibile alle librerie: glfw (finestra), assimp (modelli), OpenGL (grafica)
+target_link_libraries(Raymarcher PRIVATE glfw assimp OpenGL::GL)
+target_include_directories(Raymarcher PRIVATE src ${glm_SOURCE_DIR})
