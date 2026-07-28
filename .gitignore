@@ -1,0 +1,11 @@
+# Ignora la cartella di compilazione di CMake
+build/
+
+# Ignora i file di cache generati dal sistema
+.cache/
+.DS_Store
+
+# Ignora eseguibili nativi (se generati fuori da build)
+*.app
+*.exe
+*.out
