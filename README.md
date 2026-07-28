@@ -1,25 +1,38 @@
-# Custom C++ PBR Engine & Raymarcher
+# Graphics Lab
 
-Questo è un motore grafico personalizzato scritto in **C++ puro** e **OpenGL 3.3 Core**. 
-Nasce come esperimento didattico per esplorare le architetture di rendering a basso livello, allontanandosi dalle astrazioni dei motori commerciali (come Unity o Unreal Engine) per avere il controllo completo sull'hardware (CPU/GPU).
+A personal research environment built in **C++** and **OpenGL** where I implement modern rendering techniques, geometry processing algorithms, and real-time graphics experiments from scratch.
 
-## Architettura Multi-Pipeline
-Il motore supporta lo switch dinamico (a runtime) tra due diverse pipeline di rendering:
-1. **Raymarching Pipeline (SDF):** Un rendering interamente procedurale calcolato nel Fragment Shader su un Fullscreen Quad. Utilizzato per generare forme matematiche (Signed Distance Fields) senza alcuna geometria 3D.
-2. **Rasterizer Pipeline (PBR):** *[Work in Progress]* Una pipeline classica di rasterizzazione per modelli 3D (`.obj`), che implementerà il Deferred Rendering e l'illuminazione PBR (Physically Based Rendering).
+This project is a deliberate departure from commercial engines (Unity/Unreal). Its goal is to understand the math, the architecture, and the GPU pipeline behind modern computer graphics, building a custom rendering framework tailored for specific experiments.
 
-## Come Compilare (macOS)
-Il progetto utilizza CMake come build system e scarica automaticamente le librerie necessarie (come GLFW e GLM).
+## 🛠 Tech Stack
+- **Language:** C++17
+- **Graphics API:** OpenGL 3.3 Core Profile
+- **Window & Input:** GLFW
+- **Math:** GLM (OpenGL Mathematics)
+- **Asset Loading:** Assimp (Open Asset Import Library)
+- **Build System:** CMake (Cross-platform support)
+
+## 🗺 Roadmap & Devlog
+The project is strictly developed *one feature at a time*, following a rigorous documentation approach.
+- See the [ROADMAP_GRAPHICS_LAB.md](ROADMAP_GRAPHICS_LAB.md) for the technical trajectory (Deferred Rendering, PBR, Shadow Mapping, SDF, Compute).
+- See the [PROJECT_MEMORY.md](PROJECT_MEMORY.md) for the internal Devlog and architectural choices behind every single feature implemented.
+
+## 🚀 How to Build
+This project uses a standard, cross-platform CMake configuration. It will automatically download dependencies like Assimp and GLM using `FetchContent`.
 
 ```bash
-# Genera i file di configurazione
+# 1. Clone the repository
+git clone https://github.com/federicocolombo12/PBR-Engine-Cpp.git
+cd PBR-Engine-Cpp
+
+# 2. Configure the build
 cmake -B build
 
-# Compila l'eseguibile
+# 3. Compile
 cmake --build build
 
-# Lancia il motore
+# 4. Run the lab
 ./build/Raymarcher
 ```
 
-*Progetto sviluppato come portfolio e approfondimento tecnico nel campo del Graphics Programming e del Technical Art.*
+*(Note: Assimp compilation during the first build might take a few minutes).*
