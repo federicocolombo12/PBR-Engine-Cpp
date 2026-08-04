@@ -1,6 +1,8 @@
-# Graphics Lab
+# One Piece Graphics Lab 🏴‍☠️
 
-A personal research environment built in **C++** and **OpenGL** where I implement modern rendering techniques, geometry processing algorithms, and real-time graphics experiments from scratch.
+A personal research environment built in **C++** and **OpenGL** where I implement modern rendering techniques, geometry processing algorithms, and real-time graphics experiments from scratch. 
+
+To make the learning process engaging, all graphics techniques (from Physically Based Rendering to NPR/Toon Shading, up to Ocean Simulation) are tested and showcased using a **One Piece** thematic approach.
 
 This project is a deliberate departure from commercial engines (Unity/Unreal). Its goal is to understand the math, the architecture, and the GPU pipeline behind modern computer graphics, building a custom rendering framework tailored for specific experiments.
 

@@ -12,9 +12,9 @@ A personal research environment where I implement modern rendering techniques, g
 - [x] Integrazione Assimp e caricamento `.obj`
 
 ## 2. Architettura Rendering Avanzata (In Corso)
-- [ ] **Deferred Rendering:** Implementazione del G-Buffer (Position, Normal, Albedo).
-- [ ] **Lighting:** Modello di illuminazione deferito (Point Lights, Directional).
-- [ ] **PBR (Physically Based Rendering):** Materiali fisicamente accurati (Cook-Torrance).
+- [ ] **Deferred Rendering (G-Buffer):** Preparazione dell'infrastruttura per luci illimitate.
+- [ ] **PBR & Lighting:** Modello di illuminazione fisicamente accurato (Cook-Torrance).
+- [ ] **NPR / Toon Shading (Stile Anime):** Modifica del modello di illuminazione per ottenere il classico effetto Cel Shading e Outline nero in stile animazione giapponese.
 - [ ] **Shadow Mapping:** Generazione di mappe d'ombra direzionali.
 
 ## 3. Post-Processing & Screen Space
@@ -28,4 +28,5 @@ A personal research environment where I implement modern rendering techniques, g
 
 ## 5. GPU & Simulation (Compute Shaders)
 - [ ] **Compute Shaders:** Setup base per calcoli GPU paralleli.
-- [ ] **Particles / Fluid:** Simulazione GPGPU.
+- [ ] **Water Simulation (Rotta Maggiore):** Simulazione oceanica tramite Gerstner Waves / FFT per renderizzare mari realistici.
+- [ ] **Particles:** Effetti particellari GPGPU (fuoco, fumo, Haki).
