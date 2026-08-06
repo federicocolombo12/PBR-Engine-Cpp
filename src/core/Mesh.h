@@ -8,16 +8,26 @@
 struct Vertex {
     glm::vec3 Position;
     glm::vec3 Normal;
-    glm::vec2 TexCoords; // UV
+    glm::vec2 TexCoords;
+};
+
+// Rappresenta una texture caricata in memoria
+struct Texture {
+    unsigned int id;
+    std::string type;
+    std::string path;
 };
 
 // Una Mesh è un singolo "pezzo" di geometria solida, con il suo VBO, VAO e l'EBO (Index Buffer)
 class Mesh {
 public:
-    std::vector<Vertex>       vertices;
+    // Dati della Mesh
+    std::vector<Vertex> vertices;
     std::vector<unsigned int> indices;
+    std::vector<Texture> textures;
 
-    Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices);
+    // Costruttore
+    Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures);
     
     // Funzione per inviare i dati alla GPU e disegnare questa mesh
     void Draw(Shader &shader);

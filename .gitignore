@@ -9,3 +9,10 @@ build/
 *.app
 *.exe
 *.out
+
+# Ignora i documenti di studio personali e dell'agente
+PROJECT_MEMORY.md
+ROADMAP_GRAPHICS_LAB.md
+TUTORIAL.md
+task.md
+compile_commands.json

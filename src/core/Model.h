@@ -14,6 +14,7 @@
 class Model {
 public:
     std::vector<Mesh> meshes;
+    std::string directory; // Percorso della cartella contenente l'OBJ
 
     // Passiamo il percorso del file .obj o .fbx
     Model(std::string path);
@@ -23,6 +24,10 @@ private:
     void loadModel(std::string path);
     // Funzioni ricorsive per navigare nell'albero di Assimp
     void processNode(aiNode *node, const aiScene *scene);
-    // Converte una mesh di Assimp in una nostra Mesh
+    // Funzioni helper interne
     Mesh processMesh(aiMesh *mesh, const aiScene *scene);
+    
+    // Novità: Gestione dei materiali e delle texture
+    std::vector<Texture> textures_loaded; // Cache per evitare di caricare due volte la stessa immagine
+    std::vector<Texture> loadMaterialTextures(aiMaterial *mat, aiTextureType type, std::string typeName);
 };

@@ -2,9 +2,10 @@
 #define GL_SILENCE_DEPRECATION
 #include <OpenGL/gl3.h>
 
-Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices) {
+Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures) {
     this->vertices = vertices;
     this->indices = indices;
+    this->textures = textures;
     setupMesh();
 }
 
@@ -43,7 +44,30 @@ void Mesh::setupMesh() {
 }
 
 void Mesh::Draw(Shader &shader) {
-    // Invece di usare glDrawArrays, usiamo glDrawElements per dire ad OpenGL di usare l'EBO!
+    // 1. Colleghiamo tutte le texture necessarie prima del render
+    shader.setBool("hasTexture", textures.size() > 0);
+    
+    unsigned int diffuseNr = 1;
+    unsigned int specularNr = 1;
+    for(unsigned int i = 0; i < textures.size(); i++) {
+        // Attiviamo l'unità di texture corretta (GL_TEXTURE0, GL_TEXTURE1, ecc.)
+        glActiveTexture(GL_TEXTURE0 + i);
+        
+        std::string number;
+        std::string name = textures[i].type;
+        if(name == "texture_diffuse")
+            number = std::to_string(diffuseNr++);
+        else if(name == "texture_specular")
+            number = std::to_string(specularNr++);
+            
+        // Diciamo allo shader quale unità di texture usare (es: "texture_diffuse1" -> 0)
+        shader.setInt((name + number).c_str(), i);
+        glBindTexture(GL_TEXTURE_2D, textures[i].id);
+    }
+    // Ripristiniamo l'unità 0 per sicurezza
+    glActiveTexture(GL_TEXTURE0);
+
+    // 2. Disegniamo la geometria
     glBindVertexArray(VAO);
     glDrawElements(GL_TRIANGLES, static_cast<unsigned int>(indices.size()), GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
