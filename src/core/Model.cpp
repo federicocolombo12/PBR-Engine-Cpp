@@ -4,16 +4,46 @@
 #include <OpenGL/gl3.h>
 #include "stb_image.h"
 
-// Funzione helper per caricare i file immagine su GPU
+// Funzione helper per caricare i file immagine su GPU (Texture Loader Universale)
 unsigned int TextureFromFile(const char *path, const std::string &directory) {
-    std::string filename = std::string(path);
-    filename = directory + '/' + filename;
+    // IGINEZZATORE DI PERCORSI (Path Sanitizer)
+    std::string rawPath = std::string(path);
+    // Sostituiamo eventuali backslash di Windows con gli slash di Unix/Mac
+    std::replace(rawPath.begin(), rawPath.end(), '\\', '/');
+    // Strappiamo via tutte le cartelle originali e teniamo solo il nome del file (es. "Cerberus_A.tga")
+    std::string filename = rawPath.substr(rawPath.find_last_of('/') + 1);
+
+    // Sistema di Fallback a 3 livelli:
+    // 1. Proviamo il percorso crudo (per i modelli vecchi o fatti benissimo)
+    std::string try1 = directory + '/' + rawPath;
+    // 2. Forza la ricerca nella cartella "textures/" che sta di fianco a "source/"
+    std::string try2 = directory + "/../textures/" + filename;
+    // 3. Molti asset convertiti online prendono il .tga e gli appiccicano il .png. Proviamolo!
+    std::string try3 = directory + "/../textures/" + filename + ".png";
+
+    int width, height, nrComponents;
+    unsigned char *data = nullptr;
+    std::string loadedPath = "";
+
+    // Tentativo 1
+    data = stbi_load(try1.c_str(), &width, &height, &nrComponents, 0);
+    if(data) loadedPath = try1;
+    
+    // Tentativo 2
+    if (!data) {
+        data = stbi_load(try2.c_str(), &width, &height, &nrComponents, 0);
+        if(data) loadedPath = try2;
+    }
+
+    // Tentativo 3
+    if (!data) {
+        data = stbi_load(try3.c_str(), &width, &height, &nrComponents, 0);
+        if(data) loadedPath = try3;
+    }
 
     unsigned int textureID;
     glGenTextures(1, &textureID);
 
-    int width, height, nrComponents;
-    unsigned char *data = stbi_load(filename.c_str(), &width, &height, &nrComponents, 0);
     if (data) {
         GLenum format = GL_RGBA;
         if (nrComponents == 1) format = GL_RED;
@@ -31,7 +61,8 @@ unsigned int TextureFromFile(const char *path, const std::string &directory) {
 
         stbi_image_free(data);
     } else {
-        std::cout << "Texture non trovata al percorso: " << path << std::endl;
+        std::cout << "ERRORE TEXTURE CRITICO: Impossibile trovare la texture -> " << filename << std::endl;
+        std::cout << "Provati i seguenti percorsi:\n1. " << try1 << "\n2. " << try2 << "\n3. " << try3 << std::endl;
         stbi_image_free(data);
     }
 
@@ -54,7 +85,8 @@ void Model::loadModel(std::string path) {
     // aiProcess_Triangulate: Forza Assimp a dividere tutti i poligoni strani in Triangoli (GPU amichevole)
     // aiProcess_FlipUVs: Capovolge l'asse Y delle texture
     // aiProcess_GenSmoothNormals: SE il modello 3D non ha le normali salvate nel file, le calcola matematicamente!
-    const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_GenSmoothNormals);
+    // aiProcess_CalcTangentSpace: Calcola la matrice TBN per il Normal Mapping
+    const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_GenSmoothNormals | aiProcess_CalcTangentSpace);
 
     if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
         std::cout << "ERRORE ASSIMP: Impossibile caricare il modello! " << importer.GetErrorString() << std::endl;
@@ -103,6 +135,15 @@ Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene) {
             vertex.TexCoords = glm::vec2(0.0f, 0.0f);
         }
         
+        // Tangenti e Bitangenti (per il Normal Mapping)
+        if (mesh->HasTangentsAndBitangents()) {
+            vertex.Tangent = glm::vec3(mesh->mTangents[i].x, mesh->mTangents[i].y, mesh->mTangents[i].z);
+            vertex.Bitangent = glm::vec3(mesh->mBitangents[i].x, mesh->mBitangents[i].y, mesh->mBitangents[i].z);
+        } else {
+            vertex.Tangent = glm::vec3(0.0f);
+            vertex.Bitangent = glm::vec3(0.0f);
+        }
+        
         vertices.push_back(vertex);
     }
 
@@ -121,6 +162,23 @@ Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene) {
         // 1. Mappa Diffuse (il colore base)
         std::vector<Texture> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
         textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
+        
+        // 2. Normal Map (Per i dettagli in rilievo reali)
+        // Nota: Alcuni formati salvano le Normal in aiTextureType_HEIGHT, noi cerchiamo NORMALS.
+        std::vector<Texture> normalMaps = loadMaterialTextures(material, aiTextureType_NORMALS, "texture_normal");
+        textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
+
+        // 3. Metallic (È metallo o plastica?)
+        std::vector<Texture> metallicMaps = loadMaterialTextures(material, aiTextureType_METALNESS, "texture_metallic");
+        textures.insert(textures.end(), metallicMaps.begin(), metallicMaps.end());
+
+        // 4. Roughness (Quanto è ruvido/opaco?)
+        std::vector<Texture> roughnessMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE_ROUGHNESS, "texture_roughness");
+        textures.insert(textures.end(), roughnessMaps.begin(), roughnessMaps.end());
+
+        // 5. Ambient Occlusion (Micro-ombre)
+        std::vector<Texture> aoMaps = loadMaterialTextures(material, aiTextureType_AMBIENT, "texture_ao");
+        textures.insert(textures.end(), aoMaps.begin(), aoMaps.end());
     }
         
     return Mesh(vertices, indices, textures);

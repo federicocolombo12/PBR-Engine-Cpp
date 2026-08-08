@@ -12,8 +12,10 @@ A personal research environment where I implement modern rendering techniques, g
 - [x] Integrazione Assimp e caricamento `.obj`
 
 ## 2. Architettura Rendering Avanzata (In Corso)
-- [ ] **Deferred Rendering (G-Buffer):** Preparazione dell'infrastruttura per luci illimitate.
+- [x] **Deferred Rendering (G-Buffer):** Preparazione dell'infrastruttura per luci illimitate. (Incluso Texture Loading con `stb_image`)
+- [ ] **Parallax Occlusion Mapping (POM):** Simulare profondità geometrica estrema su superfici piatte (Raymarching nello spazio tangente).
 - [ ] **PBR & Lighting:** Modello di illuminazione fisicamente accurato (Cook-Torrance).
+- [ ] **Image Based Lighting (IBL):** Illuminazione globale PBR e riflessi speculari tramite Skybox HDRI (Irradiance Maps e Pre-Filtered Environment Maps).
 - [ ] **NPR / Toon Shading (Stile Anime):** Modifica del modello di illuminazione per ottenere il classico effetto Cel Shading e Outline nero in stile animazione giapponese.
 - [ ] **Shadow Mapping:** Generazione di mappe d'ombra direzionali.
 

@@ -52,5 +52,9 @@ add_executable(01_Raymarcher "src/experiments/01_Raymarcher/main.cpp")
 target_link_libraries(01_Raymarcher PRIVATE CoreLib)
 
 # === ESPERIMENTO 2: DEFERRED RENDERING ===
-add_executable(02_Deferred "src/experiments/02_Deferred/main.cpp")
+add_executable(02_Deferred src/experiments/02_Deferred/main.cpp)
 target_link_libraries(02_Deferred PRIVATE CoreLib)
+
+# === ESPERIMENTO 3: PBR (PHYSICALLY BASED RENDERING) ===
+add_executable(03_PBR src/experiments/03_PBR/main.cpp)
+target_link_libraries(03_PBR PRIVATE CoreLib)

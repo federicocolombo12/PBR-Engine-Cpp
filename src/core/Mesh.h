@@ -9,6 +9,9 @@ struct Vertex {
     glm::vec3 Position;
     glm::vec3 Normal;
     glm::vec2 TexCoords;
+    // Nuovi attributi per il Normal Mapping (Spazio Tangente)
+    glm::vec3 Tangent;
+    glm::vec3 Bitangent;
 };
 
 // Rappresenta una texture caricata in memoria
