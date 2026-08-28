@@ -61,6 +61,7 @@ void Mesh::Draw(Shader &shader) {
     unsigned int metallicNr = 1;
     unsigned int roughnessNr = 1;
     unsigned int aoNr = 1;
+    unsigned int heightNr = 1;
     
     for(unsigned int i = 0; i < textures.size(); i++) {
         // Attiviamo l'unità di texture corretta (GL_TEXTURE0, GL_TEXTURE1, ecc.)
@@ -74,6 +75,7 @@ void Mesh::Draw(Shader &shader) {
         else if(name == "texture_metallic") number = std::to_string(metallicNr++);
         else if(name == "texture_roughness") number = std::to_string(roughnessNr++);
         else if(name == "texture_ao") number = std::to_string(aoNr++);
+        else if(name == "texture_height") number = std::to_string(heightNr++);
             
         // Diciamo allo shader quale unità di texture usare (es: "texture_metallic1" -> 2)
         shader.setInt((name + number).c_str(), i);

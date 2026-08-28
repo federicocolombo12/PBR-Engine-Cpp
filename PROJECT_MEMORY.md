@@ -66,3 +66,15 @@ Ogni nuova feature seguirà questo schema:
 - **Difficoltà & Debug (Case Study Reale):** 
   - **Pathing Sporchi negli FBX:** L'asset 3D puntava a percorsi assoluti sul PC dell'artista (`Textures\Cerberus_A.tga`). Scritto un `Path Sanitizer` in C++ dentro `TextureFromFile` che forza la conversione del percorso in `../textures/[nome].png` prevenendo crash a catena.
   - **Metalli Neri (Vuoto Cosmico):** Nel PBR puro senza IBL (Image Based Lighting), i metalli hanno `kD = 0`. Poiché la luce ambientale standard è l'unica illuminazione oltre al *point light*, il metallo riflette letteralmente il vuoto nero della scena 3D, apparendo scurissimo. Questo getta le basi per la prossima grande sfida: implementare l'IBL tramite Skybox HDRI.
+
+### Feature 7: Silhouette Parallax Occlusion Mapping (SPOM) su G-Buffer
+- **Problema:** Simulare geometrie ad altissima densità (es. crepe e mattoni di un muro) senza il costo computazionale di mesh con milioni di vertici (no Tessellation), garantendo che i pixel si facciano ombra a vicenda e che i bordi del poligono piatto appaiano frastagliati come la geometria simulata (effetto Crimson Desert).
+- **Teoria:** Implementazione diretta del paper SIGGRAPH 2006 di N. Tatarchuk. Si trasforma il vettore della telecamera dallo Spazio Mondo allo *Spazio Tangente* invertendo la matrice TBN (Local Space orientato alle UV). Da lì, il raggio visivo compie un Raymarching (scende a step) campionando la Height Map fino a intersecare la materia. Si applica infine un'interpolazione lineare per trovare il punto sub-pixel esatto.
+- **Implementazione:** Abbiamo diviso l'esperimento creando `04_POM`. 
+  1. Aggiornato il parser di `Assimp` in `Model.cpp` per catturare `aiTextureType_DISPLACEMENT/HEIGHT` e inviarlo all'hardware.
+  2. Spostato tutto il codice POM nel **Geometry Pass** (`g_buffer_pom.vert/frag`). Questo perché il calcolo delle UV "spostate" deve avvenire *prima* di campionare Albedo, Normal e parametri PBR.
+  3. Aggiunto il **LOD Dinamico**: Il ciclo di Raymarching si adatta in base all'angolo di visione usando `dot(vec3(0,0,1), viewDir)` per massimizzare le performance.
+  4. Aggiunto il **Silhouette Clipping**: Se l'UV finale esce dal range `[0,1]`, chiamiamo `discard`.
+- **Difficoltà & Debug (Case Study Reale):**
+  - **Dati mancanti:** Se un modello 3D non ha una mappa di spostamento reale, l'algoritmo fallisce clamorosamente usando texture casuali. È essenziale testare questo shader su quad appositamente preparati o con asset dotati di Displacement.
+  - **Spazio Tangente:** Dimenticare di convertire la `viewPos` in Tangent Space porta a deformazioni assurde quando l'oggetto ruota, poiché il Raymarching crede che la gravità cambi costantemente direzione. La TBN inversa è obbligatoria.

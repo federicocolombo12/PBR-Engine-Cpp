@@ -179,6 +179,14 @@ Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene) {
         // 5. Ambient Occlusion (Micro-ombre)
         std::vector<Texture> aoMaps = loadMaterialTextures(material, aiTextureType_AMBIENT, "texture_ao");
         textures.insert(textures.end(), aoMaps.begin(), aoMaps.end());
+
+        // 6. Height Map / Displacement Map (Per POM e Tassellazione)
+        std::vector<Texture> heightMaps = loadMaterialTextures(material, aiTextureType_DISPLACEMENT, "texture_height");
+        if(heightMaps.empty()) {
+            // Alcuni formati (es. OBJ classici) salvano le mappe di spostamento/bump sotto HEIGHT
+            heightMaps = loadMaterialTextures(material, aiTextureType_HEIGHT, "texture_height");
+        }
+        textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
     }
         
     return Mesh(vertices, indices, textures);

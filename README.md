@@ -1,8 +1,8 @@
-# One Piece Graphics Lab 🏴‍☠️
+# C++ Graphics Engine Lab 🧪
 
 A personal research environment built in **C++** and **OpenGL** where I implement modern rendering techniques, geometry processing algorithms, and real-time graphics experiments from scratch. 
 
-To make the learning process engaging, all graphics techniques (from Physically Based Rendering to NPR/Toon Shading, up to Ocean Simulation) are tested and showcased using a **One Piece** thematic approach.
+This repository serves as a personal laboratory for learning and implementing advanced computer graphics techniques in C++ and OpenGL. It covers a wide range of topics, from Physically Based Rendering (PBR) and Deferred Rendering to Parallax Occlusion Mapping (POM) and advanced visual effects, using complex multi-mesh assets to ensure robust, production-ready rendering pipelines.
 
 This project is a deliberate departure from commercial engines (Unity/Unreal). Its goal is to understand the math, the architecture, and the GPU pipeline behind modern computer graphics, building a custom rendering framework tailored for specific experiments.
 

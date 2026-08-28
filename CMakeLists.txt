@@ -58,3 +58,7 @@ target_link_libraries(02_Deferred PRIVATE CoreLib)
 # === ESPERIMENTO 3: PBR (PHYSICALLY BASED RENDERING) ===
 add_executable(03_PBR src/experiments/03_PBR/main.cpp)
 target_link_libraries(03_PBR PRIVATE CoreLib)
+
+# === ESPERIMENTO 4: SILHOUETTE POM ===
+add_executable(04_POM src/experiments/04_POM/main.cpp)
+target_link_libraries(04_POM PRIVATE CoreLib)

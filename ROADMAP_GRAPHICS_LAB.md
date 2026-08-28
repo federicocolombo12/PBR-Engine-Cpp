@@ -13,7 +13,7 @@ A personal research environment where I implement modern rendering techniques, g
 
 ## 2. Architettura Rendering Avanzata (In Corso)
 - [x] **Deferred Rendering (G-Buffer):** Preparazione dell'infrastruttura per luci illimitate. (Incluso Texture Loading con `stb_image`)
-- [ ] **Parallax Occlusion Mapping (POM):** Simulare profondità geometrica estrema su superfici piatte (Raymarching nello spazio tangente).
+- [ ] **Silhouette Parallax Occlusion Mapping (SPOM):** Raymarching nello spazio tangente con *Silhouette Clipping* stile Crimson Desert.
 - [ ] **PBR & Lighting:** Modello di illuminazione fisicamente accurato (Cook-Torrance).
 - [ ] **Image Based Lighting (IBL):** Illuminazione globale PBR e riflessi speculari tramite Skybox HDRI (Irradiance Maps e Pre-Filtered Environment Maps).
 - [ ] **NPR / Toon Shading (Stile Anime):** Modifica del modello di illuminazione per ottenere il classico effetto Cel Shading e Outline nero in stile animazione giapponese.
@@ -32,3 +32,10 @@ A personal research environment where I implement modern rendering techniques, g
 - [ ] **Compute Shaders:** Setup base per calcoli GPU paralleli.
 - [ ] **Water Simulation (Rotta Maggiore):** Simulazione oceanica tramite Gerstner Waves / FFT per renderizzare mari realistici.
 - [ ] **Particles:** Effetti particellari GPGPU (fuoco, fumo, Haki).
+
+## 6. Job Readiness & Industry Tooling
+*(Aggiunti in base alle linee guida di Alex Tardif per i Graphics Programmers entry-level)*
+- [ ] **Graphics Debugger:** Integrare l'uso di RenderDoc/PIX nel workflow per debuggare le draw calls e il G-Buffer in tempo reale.
+- [ ] **Paper Implementation:** Il POM e le Water Simulations sono considerati implementazioni formali di Paper accademici (Asset per Portfolio).
+- [ ] **Modern API Transition:** Una volta padroneggiata la pipeline su OpenGL, effettuare un porting del framework base (Rendering PBR) su **Vulkan** o **D3D12**.
+
