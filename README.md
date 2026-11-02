@@ -9,7 +9,10 @@
 
 A modular, low-level real-time rendering engine and shader research laboratory built from scratch in **C++17** and **OpenGL Core Profile**. 
 
-This project is a deliberate departure from commercial "black-box" engines (Unreal Engine, Unity). Its primary objective is to investigate the mathematics, hardware dispatch, and memory bandwidth constraints of the modern GPU pipeline by implementing core graphics algorithms—from **Two-Pass Deferred Shading with G-Buffer VRAM packing** to **Cook-Torrance PBR** and **Silhouette Parallax Occlusion Mapping (SPOM)**—from first principles.
+### 🎯 The Philosophy: Playing with Graphics to Bridge the Engine Gap
+As a Technical Artist and Graphics Programmer who works daily with modern production engines like **Unreal Engine 5** and **Unity**—authoring procedural PCG graphs, MetaHuman character pipelines, and complex shaders—I didn't want to just consume high-level abstractions without truly mastering the low-level machinery underneath. 
+
+I built this laboratory as a hands-on playground to **play with graphics from the bare metal up**: to dismantle the "black box", sharpen my C++ and GPU programming skills, and deeply understand the exact principles behind the features I deploy in modern game engines—how a G-Buffer serializes into VRAM, how microfacets scatter light according to the Cook-Torrance BRDF, and how driver-level state machines behave when you don't have an engine safety net.
 
 ---
 
