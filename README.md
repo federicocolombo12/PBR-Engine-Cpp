@@ -7,6 +7,10 @@
 [![Platform](https://img.shields.io/badge/Platform-macOS_%7C_Linux_%7C_Windows-lightgrey?style=flat)]()
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
+<p align="center">
+  <img src="docs/media/pbr_showcase.jpg" alt="Cook-Torrance PBR Engine Showcase" width="100%" style="border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.5);" />
+</p>
+
 A modular, low-level real-time rendering engine and shader research laboratory built from scratch in **C++17** and **OpenGL Core Profile**. 
 
 ### 🎯 The Philosophy: Playing with Graphics to Bridge the Engine Gap
@@ -16,15 +20,37 @@ I built this laboratory as a hands-on playground to **play with graphics from th
 
 ---
 
+## 📸 Visual Showcase & Lab Experiments
+
+| **1. Cook-Torrance PBR Engine (`03_PBR`)** | **2. Two-Pass Deferred G-Buffer (`02_Deferred`)** |
+| :---: | :---: |
+| <img src="docs/media/pbr_showcase.jpg" alt="Cook-Torrance PBR Engine" width="100%" /> | <img src="docs/media/deferred_gbuffer.jpg" alt="Deferred G-Buffer Inspection" width="100%" /> |
+| *Real-time microfacet specular BRDF with energy conservation* | *Separated World Pos, Normals, Albedo & packed properties* |
+
+| **3. Silhouette Parallax Occlusion Mapping (`04_POM`)** | **4. Analytical SDF Raymarcher (`01_Raymarcher`)** |
+| :---: | :---: |
+| <img src="docs/media/spom_rock.jpg" alt="Silhouette Parallax Occlusion Mapping" width="100%" /> | <img src="docs/media/raymarcher_sdf.jpg" alt="Analytical SDF Raymarcher" width="100%" /> |
+| *SIGGRAPH 2006 dynamic LOD raymarching & silhouette clipping* | *Fullscreen quad sphere-tracing with continuous CSG booleans* |
+
+> 🎬 **Full 60 FPS Video Demonstrations:** High-resolution videos and interactive breakdowns are hosted on the [Graphics Lab Portfolio Page](https://federicocolombo12.github.io/PortFolio/projects/graphics-lab/).
+
+---
+
 ## 🏗️ Architecture & Engine Layout
 
 The engine is engineered around a clean separation between reusable core runtime systems (`src/core/`) and isolated experimental targets (`src/experiments/`):
+
+<p align="center">
+  <img src="docs/media/engine_architecture_diagram.svg" alt="Graphics Lab Two-Pass Deferred & PBR Engine Architecture Diagram" width="100%" />
+</p>
 
 ```
 PBR-Engine-Cpp/
 ├── CMakeLists.txt                # Automated FetchContent dependency management
 ├── PROJECT_MEMORY.md             # Formal devlog recording problems, math & bug fixes
 ├── ROADMAP_GRAPHICS_LAB.md       # Technical trajectory & milestone tracking
+├── docs/
+│   └── media/                    # Architecture diagrams & visual showcases
 ├── assets/
 │   ├── models/                   # Complex multi-material FBX/OBJ test meshes (Cerberus, Rocks)
 │   └── shaders/
@@ -57,6 +83,10 @@ Traditional Forward Rendering evaluates lighting inside geometry draw calls, sca
 1. **Geometry Pass:** Rasterizes geometry into a Multi-Render Target (**MRT**) Framebuffer without computing lighting ($O(N)$).
 2. **Lighting Pass:** Renders a single screen-space quad, sampling the G-Buffer textures to evaluate lighting exclusively on visible fragments ($O(M)$), eliminating overdraw penalties.
 
+<p align="center">
+  <img src="docs/media/deferred_gbuffer.jpg" alt="Deferred G-Buffer Inspection" width="100%" />
+</p>
+
 #### Channel Packing Scheme (VRAM Bandwidth Optimization)
 Rather than allocating 6 separate textures, the engine packs 6 physical surface properties into just **3 high-precision `GL_RGBA16F` textures**, cutting memory bandwidth consumption by ~33%:
 
@@ -86,6 +116,10 @@ float metallic   = albedoMetal.a;
 ### 2. Physically Based Rendering (Cook-Torrance BRDF)
 Implements the microfacet model of specular reflection based on the physics of light-matter interaction:
 
+<p align="center">
+  <img src="docs/media/pbr_showcase.jpg" alt="Cook-Torrance PBR Showcase" width="100%" />
+</p>
+
 $$f_r = k_d \frac{c}{\pi} + \frac{D \cdot F \cdot G}{4(\vec{n} \cdot \vec{\omega}_o)(\vec{n} \cdot \vec{\omega}_i)}$$
 
 - **$D$ — Normal Distribution Function:** Trowbridge-Reitz GGX with Disney's $\alpha = \text{roughness}^2$ remapping.
@@ -93,10 +127,32 @@ $$f_r = k_d \frac{c}{\pi} + \frac{D \cdot F \cdot G}{4(\vec{n} \cdot \vec{\omega
 - **$F$ — Fresnel Reflectivity:** Fresnel-Schlick approximation with dielectric baseline $F_0 = 0.04$ tinted by Albedo for metallic conductors ($F_0 = \text{mix}(0.04, \text{albedo}, \text{metallic})$).
 - **Energy Conservation:** $k_D = (1.0 - k_S) \times (1.0 - \text{metallic})$, guaranteeing that metals absorb refracted light into their conduction band.
 
+```glsl
+// Cook-Torrance evaluation in pbr_light.frag:
+float NDF = DistributionGGX(N, H, roughness);
+float G   = GeometrySmith(N, V, L, roughness);
+vec3 F    = FresnelSchlick(max(dot(H, V), 0.0), F0);
+
+vec3 numerator    = NDF * G * F;
+float denominator = 4.0 * max(dot(N, V), 0.0) * max(dot(N, L), 0.0) + 0.0001;
+vec3 specular     = numerator / denominator;
+
+vec3 kS = F;
+vec3 kD = vec3(1.0) - kS;
+kD *= 1.0 - metallic;
+
+vec3 Lo = (kD * albedo / PI + specular) * radiance * max(dot(N, L), 0.0);
+```
+
 ---
 
 ### 3. Silhouette Parallax Occlusion Mapping (SPOM)
 Direct implementation of **Natalya Tatarchuk's SIGGRAPH 2006 paper** on real-time displacement approximations:
+
+<p align="center">
+  <img src="docs/media/spom_rock.jpg" alt="Silhouette Parallax Occlusion Mapping on Quad" width="100%" />
+</p>
+
 - **Tangent Space Inversion:** Transformed camera view vector into local Tangent Space via the inverse TBN matrix ($\text{TBN}^T$).
 - **Dynamic LOD Raymarching:** Dynamically scales ray steps between $8$ (normal viewing) and $32$ (grazing angles) based on $\text{dot}(\vec{N}, \vec{V})$ to preserve framerate.
 - **Sub-Pixel Linear Refinement:** Computes linear depth interpolation between pre-collision and post-collision samples to eliminate stepping artifacts.
@@ -115,6 +171,11 @@ if (finalTexCoords.x > 1.0 || finalTexCoords.y > 1.0 ||
 
 ### 4. Analytical Raymarching & SDFs
 A dedicated screen-space raymarching target (`01_Raymarcher`) evaluating mathematical Signed Distance Fields (SDFs):
+
+<p align="center">
+  <img src="docs/media/raymarcher_sdf.jpg" alt="Analytical SDF Raymarcher" width="100%" />
+</p>
+
 - **Sphere Tracing:** Dynamically step rays by the exact value of the scene's global distance field.
 - **Constructive Solid Geometry (CSG):** Real-time union, intersection, and subtraction of procedural 3D primitives.
 - **Numerical Gradient Normals:** Surface normals extracted using the central tetrahedron technique ($f(\vec{p} \pm \epsilon)$) without stored vertex buffers.

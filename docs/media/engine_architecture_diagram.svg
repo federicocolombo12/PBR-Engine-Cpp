@@ -1,0 +1,210 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 640" width="100%" height="100%" style="background: #0d0d11; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Space Grotesk', monospace;">
+  <defs>
+    <!-- Gradients -->
+    <linearGradient id="cyanGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00E5FF" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#007799" stop-opacity="0.4"/>
+    </linearGradient>
+    <linearGradient id="purpleGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#A855F7" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#581C87" stop-opacity="0.4"/>
+    </linearGradient>
+    <linearGradient id="amberGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F59E0B" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#78350F" stop-opacity="0.4"/>
+    </linearGradient>
+    <linearGradient id="greenGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#10B981" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#064E3B" stop-opacity="0.4"/>
+    </linearGradient>
+
+    <!-- Markers -->
+    <marker id="arrowCyan" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+      <path d="M 0 1 L 6 4 L 0 7 z" fill="#00E5FF"/>
+    </marker>
+    <marker id="arrowPurple" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+      <path d="M 0 1 L 6 4 L 0 7 z" fill="#A855F7"/>
+    </marker>
+    <marker id="arrowAmber" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+      <path d="M 0 1 L 6 4 L 0 7 z" fill="#F59E0B"/>
+    </marker>
+
+    <!-- Glow filters -->
+    <filter id="glowCyan" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#00E5FF" flood-opacity="0.3"/>
+    </filter>
+    <filter id="cardShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#000" flood-opacity="0.5"/>
+    </filter>
+  </defs>
+
+  <!-- Background Grid Pattern -->
+  <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+    <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+  </pattern>
+  <rect width="100%" height="100%" fill="url(#grid)" />
+
+  <!-- Title & Metadata -->
+  <text x="50" y="45" fill="#FFFFFF" font-size="20" font-weight="700" letter-spacing="1">GRAPHICS LAB: TWO-PASS DEFERRED &amp; PBR ARCHITECTURE</text>
+  <text x="50" y="68" fill="#64748B" font-size="12" font-weight="500">OpenGL 3.3/4.6 Core • C++17 • Multi-Render Target (MRT) G-Buffer Channel Packing</text>
+
+  <!-- ============================================================== -->
+  <!-- COLUMN 1: STAGE 1 - ASSET PIPELINE & CORE ENGINE                -->
+  <!-- ============================================================== -->
+  <g transform="translate(50, 95)" filter="url(#cardShadow)">
+    <rect width="250" height="505" rx="10" fill="#141419" stroke="#252530" stroke-width="1.5"/>
+    <rect width="250" height="34" rx="10" fill="rgba(0, 229, 255, 0.08)"/>
+    <path d="M 0 34 L 250 34" stroke="rgba(0, 229, 255, 0.3)" stroke-width="1"/>
+    <text x="18" y="22" fill="#00E5FF" font-size="12" font-weight="700" letter-spacing="1">1. CORE &amp; ASSET PIPELINE</text>
+
+    <!-- Node: GLFW & Input -->
+    <rect x="15" y="48" width="220" height="60" rx="6" fill="#1C1C24" stroke="#2E2E3C" stroke-width="1"/>
+    <text x="25" y="70" fill="#E2E8F0" font-size="12" font-weight="600">GLFW Window &amp; 6DOF Camera</text>
+    <text x="25" y="88" fill="#94A3B8" font-size="10">Euler Angles (Pitch/Yaw) • Δt Speed</text>
+    <text x="25" y="100" fill="#F59E0B" font-size="9.5">Clamp @ ±89.0° (Gimbal Lock Fix)</text>
+
+    <!-- Node: Assimp Importer -->
+    <rect x="15" y="120" width="220" height="92" rx="6" fill="#1C1C24" stroke="#2E2E3C" stroke-width="1"/>
+    <text x="25" y="142" fill="#E2E8F0" font-size="12" font-weight="600">Assimp Model Parser</text>
+    <text x="25" y="160" fill="#94A3B8" font-size="10">aiProcess_Triangulate</text>
+    <text x="25" y="174" fill="#94A3B8" font-size="10">aiProcess_CalcTangentSpace (TBN)</text>
+    <text x="25" y="188" fill="#10B981" font-size="9.5">aiProcess_GenSmoothNormals (NaN fix)</text>
+    <text x="25" y="202" fill="#94A3B8" font-size="9.5">FBX Absolute Path Sanitizer</text>
+
+    <!-- Node: Mesh OOP Hierarchy -->
+    <rect x="15" y="224" width="220" height="72" rx="6" fill="#1C1C24" stroke="#2E2E3C" stroke-width="1"/>
+    <text x="25" y="246" fill="#E2E8F0" font-size="12" font-weight="600">Mesh &amp; Buffer Objects</text>
+    <text x="25" y="264" fill="#94A3B8" font-size="10">VAO (State Layout) • VBO (Vertices)</text>
+    <text x="25" y="278" fill="#94A3B8" font-size="10">EBO (Index Buffer for glDrawElements)</text>
+    <text x="25" y="290" fill="#CBD5E1" font-size="9.5">State isolation per texture unit</text>
+
+    <!-- Node: Shader Abstraction -->
+    <rect x="15" y="308" width="220" height="60" rx="6" fill="#1C1C24" stroke="#2E2E3C" stroke-width="1"/>
+    <text x="25" y="330" fill="#E2E8F0" font-size="12" font-weight="600">Shader.h Wrapper</text>
+    <text x="25" y="348" fill="#94A3B8" font-size="10">GLSL Compilation &amp; Link Validation</text>
+    <text x="25" y="360" fill="#94A3B8" font-size="10">Uniform cache &amp; Matrix passing</text>
+
+    <!-- Node: Analytical Raymarcher -->
+    <rect x="15" y="380" width="220" height="110" rx="6" fill="rgba(0, 229, 255, 0.04)" stroke="rgba(0, 229, 255, 0.25)" stroke-width="1"/>
+    <text x="25" y="402" fill="#00E5FF" font-size="11" font-weight="700">EXPERIMENTAL SANDBOX</text>
+    <text x="25" y="420" fill="#E2E8F0" font-size="11" font-weight="600">Analytical SDF Raymarcher</text>
+    <text x="25" y="438" fill="#94A3B8" font-size="10">• Fullscreen Quad Rasterization</text>
+    <text x="25" y="452" fill="#94A3B8" font-size="10">• Sphere Tracing &amp; CSG Booleans</text>
+    <text x="25" y="466" fill="#94A3B8" font-size="10">• Procedural Distance Estimators</text>
+    <text x="25" y="480" fill="#94A3B8" font-size="9.5" font-style="italic">Target: 01_Raymarcher</text>
+  </g>
+
+  <!-- Connect 1 -> 2 -->
+  <line x1="300" y1="210" x2="355" y2="210" stroke="#00E5FF" stroke-width="2" stroke-dasharray="4,4" marker-end="url(#arrowCyan)"/>
+  <text x="310" y="200" fill="#00E5FF" font-size="9" font-weight="600">DRAW CALLS</text>
+
+  <!-- ============================================================== -->
+  <!-- COLUMN 2: PASS 1 - GEOMETRY PASS & G-BUFFER PACKING             -->
+  <!-- ============================================================== -->
+  <g transform="translate(360, 95)" filter="url(#cardShadow)">
+    <rect width="360" height="505" rx="10" fill="#141419" stroke="#252530" stroke-width="1.5"/>
+    <rect width="360" height="34" rx="10" fill="rgba(168, 85, 247, 0.08)"/>
+    <path d="M 0 34 L 360 34" stroke="rgba(168, 85, 247, 0.3)" stroke-width="1"/>
+    <text x="18" y="22" fill="#A855F7" font-size="12" font-weight="700" letter-spacing="1">2. GEOMETRY PASS &amp; G-BUFFER (MRT)</text>
+
+    <!-- Shader Pass Box -->
+    <rect x="15" y="46" width="330" height="110" rx="6" fill="#1C1C24" stroke="#2E2E3C" stroke-width="1"/>
+    <text x="25" y="68" fill="#E2E8F0" font-size="12" font-weight="600">Geometry Shader Stages</text>
+    <text x="25" y="86" fill="#A855F7" font-size="10.5" font-weight="600">Silhouette Parallax Occlusion Mapping (SPOM)</text>
+    <text x="25" y="102" fill="#94A3B8" font-size="10">• Inverse TBN: World-to-Tangent Space</text>
+    <text x="25" y="116" fill="#94A3B8" font-size="10">• Dynamic LOD Raymarching: [8 .. 32 steps]</text>
+    <text x="25" y="130" fill="#94A3B8" font-size="10">• Sub-pixel Linear Depth Interpolation</text>
+    <text x="25" y="144" fill="#EF4444" font-size="9.5">Silhouette Discard: discard out-of-bounds UVs</text>
+
+    <!-- Framebuffer Label -->
+    <text x="20" y="180" fill="#E2E8F0" font-size="11" font-weight="700">MULTI-RENDER TARGET (MRT) PACKED BUFFERS</text>
+    <text x="20" y="196" fill="#64748B" font-size="9.5">VRAM Optimization: 6 attributes packed into 3 RGBA16F textures (Save ~33% bandwidth)</text>
+
+    <!-- Buffer 1: gPositionAO -->
+    <rect x="15" y="210" width="330" height="60" rx="6" fill="#1A1A22" stroke="#00E5FF" stroke-width="1"/>
+    <rect x="23" y="218" width="60" height="16" rx="3" fill="rgba(0, 229, 255, 0.2)"/>
+    <text x="28" y="230" fill="#00E5FF" font-size="9.5" font-weight="700">TARGET 0</text>
+    <text x="92" y="230" fill="#FFFFFF" font-size="12" font-weight="600">gPositionAO (GL_RGBA16F)</text>
+    <text x="25" y="252" fill="#94A3B8" font-size="10">RGB Channels: <tspan fill="#00E5FF">World Position (XYZ)</tspan></text>
+    <text x="25" y="264" fill="#94A3B8" font-size="10">Alpha Channel: <tspan fill="#F59E0B">Ambient Occlusion (AO)</tspan></text>
+
+    <!-- Buffer 2: gNormalRoughness -->
+    <rect x="15" y="280" width="330" height="60" rx="6" fill="#1A1A22" stroke="#A855F7" stroke-width="1"/>
+    <rect x="23" y="288" width="60" height="16" rx="3" fill="rgba(168, 85, 247, 0.2)"/>
+    <text x="28" y="300" fill="#A855F7" font-size="9.5" font-weight="700">TARGET 1</text>
+    <text x="92" y="300" fill="#FFFFFF" font-size="12" font-weight="600">gNormalRoughness (GL_RGBA16F)</text>
+    <text x="25" y="322" fill="#94A3B8" font-size="10">RGB Channels: <tspan fill="#A855F7">Surface Normal (XYZ normalized)</tspan></text>
+    <text x="25" y="334" fill="#94A3B8" font-size="10">Alpha Channel: <tspan fill="#F59E0B">Surface Roughness</tspan></text>
+
+    <!-- Buffer 3: gAlbedoMetallic -->
+    <rect x="15" y="350" width="330" height="60" rx="6" fill="#1A1A22" stroke="#10B981" stroke-width="1"/>
+    <rect x="23" y="358" width="60" height="16" rx="3" fill="rgba(16, 185, 129, 0.2)"/>
+    <text x="28" y="370" fill="#10B981" font-size="9.5" font-weight="700">TARGET 2</text>
+    <text x="92" y="370" fill="#FFFFFF" font-size="12" font-weight="600">gAlbedoMetallic (GL_RGBA16F)</text>
+    <text x="25" y="392" fill="#94A3B8" font-size="10">RGB Channels: <tspan fill="#10B981">sRGB-to-Linear Albedo (RGB)</tspan></text>
+    <text x="25" y="404" fill="#94A3B8" font-size="10">Alpha Channel: <tspan fill="#F59E0B">Metallic Parameter</tspan></text>
+
+    <!-- Depth Buffer -->
+    <rect x="15" y="420" width="330" height="38" rx="6" fill="#1A1A22" stroke="#64748B" stroke-width="1"/>
+    <text x="25" y="444" fill="#E2E8F0" font-size="11" font-weight="600">Hardware Depth: <tspan fill="#94A3B8">GL_DEPTH_COMPONENT24 (RBO)</tspan></text>
+
+    <text x="20" y="485" fill="#10B981" font-size="10" font-weight="600">✓ O(N) Geometry Complexity — Independent of Light Count</text>
+  </g>
+
+  <!-- Connect 2 -> 3 -->
+  <line x1="720" y1="310" x2="775" y2="310" stroke="#F59E0B" stroke-width="2" stroke-dasharray="4,4" marker-end="url(#arrowAmber)"/>
+  <text x="726" y="300" fill="#F59E0B" font-size="9" font-weight="600">G-BUFFER SAMPLERS</text>
+
+  <!-- ============================================================== -->
+  <!-- COLUMN 3: PASS 2 - DEFERRED LIGHTING & COOK-TORRANCE PBR        -->
+  <!-- ============================================================== -->
+  <g transform="translate(780, 95)" filter="url(#cardShadow)">
+    <rect width="370" height="505" rx="10" fill="#141419" stroke="#252530" stroke-width="1.5"/>
+    <rect width="370" height="34" rx="10" fill="rgba(245, 158, 11, 0.08)"/>
+    <path d="M 0 34 L 370 34" stroke="rgba(245, 158, 11, 0.3)" stroke-width="1"/>
+    <text x="18" y="22" fill="#F59E0B" font-size="12" font-weight="700" letter-spacing="1">3. LIGHTING PASS: COOK-TORRANCE BRDF</text>
+
+    <!-- Screen Quad Box -->
+    <rect x="15" y="46" width="340" height="50" rx="6" fill="#1C1C24" stroke="#2E2E3C" stroke-width="1"/>
+    <text x="25" y="68" fill="#E2E8F0" font-size="11.5" font-weight="600">Fullscreen Screen-Space Quad</text>
+    <text x="25" y="84" fill="#94A3B8" font-size="10">Processes visible pixels only — Zero Overdraw Penalty</text>
+
+    <!-- Unpacking -->
+    <rect x="15" y="104" width="340" height="56" rx="6" fill="#1C1C24" stroke="#2E2E3C" stroke-width="1"/>
+    <text x="25" y="124" fill="#F59E0B" font-size="11" font-weight="600">1. Fast In-Shader Unpacking</text>
+    <text x="25" y="140" fill="#94A3B8" font-size="10">Reconstructs FragPos, Normal, Albedo, Rough, Metal, AO</text>
+    <text x="25" y="152" fill="#94A3B8" font-size="10">Linearize Albedo: <tspan fill="#E2E8F0">pow(albedoRGB, vec3(2.2))</tspan></text>
+
+    <!-- PBR Microfacet Equation Box -->
+    <rect x="15" y="168" width="340" height="210" rx="6" fill="#1A1A22" stroke="rgba(245, 158, 11, 0.4)" stroke-width="1"/>
+    <text x="25" y="190" fill="#FFFFFF" font-size="12" font-weight="700">Cook-Torrance Specular BRDF</text>
+    <text x="25" y="206" fill="#F59E0B" font-size="11" font-family="monospace">f_cook_torrance = (D * G * F) / (4 * (N·V) * (N·L))</text>
+
+    <!-- NDF -->
+    <text x="25" y="230" fill="#00E5FF" font-size="11" font-weight="600">D: Trowbridge-Reitz GGX (NDF)</text>
+    <text x="25" y="244" fill="#94A3B8" font-size="10">Normal Distribution Function with a = roughness²</text>
+
+    <!-- Geometry -->
+    <text x="25" y="268" fill="#A855F7" font-size="11" font-weight="600">G: Smith's Schlick-GGX</text>
+    <text x="25" y="282" fill="#94A3B8" font-size="10">Geometric self-shadowing &amp; microfacet occlusion</text>
+
+    <!-- Fresnel -->
+    <text x="25" y="306" fill="#10B981" font-size="11" font-weight="600">F: Fresnel-Schlick Approximation</text>
+    <text x="25" y="320" fill="#94A3B8" font-size="10">F0 = mix(0.04, albedo, metallic) — Conductor tinting</text>
+
+    <!-- Energy Conservation -->
+    <text x="25" y="344" fill="#F59E0B" font-size="11" font-weight="600">Energy Conservation &amp; Metals Rule</text>
+    <text x="25" y="358" fill="#94A3B8" font-size="10">kD = (1.0 - kS) * (1.0 - metallic) [Zero diffuse on raw metals]</text>
+    <text x="25" y="370" fill="#94A3B8" font-size="10">Radiance: LightColor * (1.0 / (dist * dist))</text>
+
+    <!-- Final Output -->
+    <rect x="15" y="388" width="340" height="60" rx="6" fill="#1C1C24" stroke="#10B981" stroke-width="1"/>
+    <text x="25" y="410" fill="#10B981" font-size="11.5" font-weight="700">Final Color Output (L0)</text>
+    <text x="25" y="426" fill="#E2E8F0" font-size="10.5">color = (kD * albedo / PI + specular) * radiance * NdotL</text>
+    <text x="25" y="440" fill="#94A3B8" font-size="10">Total Light Complexity: <tspan fill="#10B981">O(M) screen-space evaluation</tspan></text>
+
+    <!-- Profiling stamp -->
+    <rect x="15" y="456" width="340" height="34" rx="4" fill="rgba(255,255,255,0.03)"/>
+    <text x="25" y="478" fill="#64748B" font-size="10">Diagnostics: RenderDoc Frame Capture • Zero VRAM Bandwidth Waste</text>
+  </g>
+</svg>
