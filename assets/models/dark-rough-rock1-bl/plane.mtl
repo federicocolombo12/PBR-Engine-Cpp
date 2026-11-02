@@ -1,0 +1,19 @@
+newmtl RockMaterial
+
+# Diffuse / Albedo
+map_Kd dark_rough_rock1_albedo.png
+
+# Normals
+map_Kn dark_rough_rock1_Normal-ogl.png
+
+# Height / Displacement
+map_disp dark_rough_rock1_Height.png
+
+# Roughness (Assimp lo mappa spesso usando map_Pr)
+map_Pr dark_rough_rock1_Roughness.png
+
+# Metallic
+map_Pm dark_rough_rock1_Metallic.png
+
+# Ambient Occlusion
+map_Ka dark_rough_rock1_ao.png

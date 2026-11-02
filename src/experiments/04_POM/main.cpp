@@ -46,7 +46,7 @@ int main() {
     Shader gBufferShader("assets/shaders/pom/g_buffer_pom.vert", "assets/shaders/pom/g_buffer_pom.frag");
 
     std::cout << "Caricamento modello in corso (Cerberus Gun)..." << std::endl;
-    Model myModel("assets/models/cerberusgun/source/Cerberus_LP.FBX.fbx");
+    Model myModel("assets/models/dark-rough-rock1-bl/plane.obj");
     std::cout << "Modello caricato!" << std::endl;
 
     // === TASK 1: SETUP G-BUFFER (DEFERRED RENDERING) ===
@@ -156,12 +156,10 @@ int main() {
         glm::mat4 projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
         glm::mat4 view = camera.GetViewMatrix();
         glm::mat4 model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(0.0f, 0.0f, -1.0f)); // Spostiamo la nave un po' indietro per vederla meglio
-        // L'FBX di Cerberus è esportato in Z-Up. Lo ruotiamo di -90 su X per farlo diventare Y-Up.
-        model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-        // Lo ruotiamo di -90 su Z (che ora è il lato) per farlo puntare dritto o orizzontale
-        model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-        model = glm::scale(model, glm::vec3(0.05f)); // La Cerberus Gun ha una scala molto più grande del normale
+        model = glm::translate(model, glm::vec3(0.0f, 0.0f, -2.0f)); 
+        // Ingrandiamo un po' il piano per vedere bene i dettagli del POM
+        model = glm::scale(model, glm::vec3(2.0f)); 
+
         // model = glm::rotate(model, (float)glfwGetTime() * 0.5f, glm::vec3(0.0f, 1.0f, 0.0f)); // Rotazione rimossa su richiesta
 
 
